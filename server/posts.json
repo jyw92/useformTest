@@ -1,0 +1,11 @@
+{
+  "posts": [
+    {
+      "id": "1df4",
+      "title": "테스트입니다.",
+      "content": "두쫀쿠",
+      "imageUrl": "https://res.cloudinary.com/dffwporwa/image/upload/v1770651183/jnb7gmhpkvrkujp9kiyk.png",
+      "createdAt": "2026. 2. 10."
+    }
+  ]
+}

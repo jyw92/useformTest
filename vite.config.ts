@@ -8,8 +8,8 @@ export default defineConfig({
   server: {
     proxy: {
       // '/todos'로 시작하는 요청이 오면 target으로 보낸다!
-      '/todos': {
-        target: 'http://localhost:4000',
+      '/posts': {
+        target: 'http://localhost:3001',
         changeOrigin: true,
       },
     },
