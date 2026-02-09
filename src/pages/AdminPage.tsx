@@ -32,7 +32,7 @@ export default function AdminPage() {
     formState: {isSubmitting},
   } = useForm<FormInputs>();
 
-  // ✅ register의 ref와 우리의 ref를 함께 사용
+  // ✅ register의 ref와 react의 ref를 함께 사용
   const {ref: registerRef, ...registerRest} = register('file');
 
   // ✅ 데이터 불러오기 (GET)
@@ -116,15 +116,24 @@ export default function AdminPage() {
   };
 
   // ✅ 게시글 삭제
+  // ❌ 삭제되는 것들 (이제 필요 없음!)
+  // import sha1 from 'crypto-js/sha1';
+  // const deleteImageFromCloudinary = ... (복잡한 함수 전체 삭제)
+
+  // ✅ 남는 건 이거 하나!
   const onDelete = async (id: string) => {
     if (!confirm('정말 삭제하시겠습니까?')) return;
 
     try {
-      await axios.delete(`/posts/${id}`);
+      // 백엔드에게 "이 ID 삭제해" 요청만 보냄
+      // (백엔드가 내부적으로 Cloudinary 이미지 삭제 + DB 삭제를 다 처리함)
+      await axios.delete(`/api/posts/${id}`);
+
       alert('삭제되었습니다.');
-      refreshPosts();
+      refreshPosts(); // 목록 갱신
     } catch (err) {
       console.error('삭제 실패:', err);
+      alert('서버 에러가 발생했습니다.');
     }
   };
 
@@ -245,7 +254,7 @@ export default function AdminPage() {
                   <td className="p-4 text-center">
                     <button
                       onClick={() => onDelete(post.id)}
-                      className="bg-red-50 text-red-600 px-3 py-1 rounded text-sm hover:bg-red-100 transition"
+                      className="bg-red-50 text-red-600 px-3 py-1 rounded text-sm hover:bg-red-100 transition whitespace-nowrap"
                     >
                       삭제
                     </button>
