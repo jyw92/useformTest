@@ -1,4 +1,4 @@
-import {useEffect, useState} from 'react';
+import {useEffect, useRef, useState} from 'react';
 import {useForm} from 'react-hook-form';
 import axios from 'axios';
 
@@ -20,17 +20,22 @@ interface FormInputs {
 
 export default function AdminPage() {
   const [posts, setPosts] = useState<Post[]>([]);
+  const [previewImage, setPreviewImage] = useState<string>('');
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
 
   // 폼 관리 훅
   const {
     register,
     handleSubmit,
     reset,
+    resetField,
     formState: {isSubmitting},
   } = useForm<FormInputs>();
 
+  // ✅ register의 ref와 우리의 ref를 함께 사용
+  const {ref: registerRef, ...registerRest} = register('file');
+
   // ✅ 데이터 불러오기 (GET)
-  // ✅ [수정] useEffect 내부에서 직접 정의
   useEffect(() => {
     const fetchPosts = async () => {
       try {
@@ -42,9 +47,9 @@ export default function AdminPage() {
     };
 
     fetchPosts();
-  }, []); // 빈 배열: 컴포넌트 마운트 시 1번만 실행
+  }, []);
 
-  // ✅ 수동 새로고침용 함수 (등록/삭제 후 호출)
+  // ✅ 수동 새로고침용 함수
   const refreshPosts = async () => {
     try {
       const res = await axios.get('/posts?_sort=createdAt&_order=desc');
@@ -54,7 +59,25 @@ export default function AdminPage() {
     }
   };
 
-  // ✅ 게시글 등록 (Upload -> Save)
+  // ✅ 이미지 파일 선택 시 미리보기
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setPreviewImage(reader.result as string);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  // ✅ 이미지 미리보기 삭제
+  const removePreviewImage = () => {
+    setPreviewImage('');
+    resetField('file'); // ✅ react-hook-form의 resetField 사용
+  };
+
+  // ✅ 게시글 등록
   const onSubmit = async (data: FormInputs) => {
     if (!confirm('게시글을 등록하시겠습니까?')) return;
 
@@ -84,21 +107,22 @@ export default function AdminPage() {
 
       alert('등록 성공! 🎉');
       reset();
-      refreshPosts(); // ✅ 목록 다시 불러오기
+      setPreviewImage('');
+      refreshPosts();
     } catch (err) {
       console.error('등록 실패:', err);
       alert('에러가 발생했습니다.');
     }
   };
 
-  // ✅ 게시글 삭제 (DELETE)
+  // ✅ 게시글 삭제
   const onDelete = async (id: string) => {
     if (!confirm('정말 삭제하시겠습니까?')) return;
 
     try {
       await axios.delete(`/posts/${id}`);
       alert('삭제되었습니다.');
-      refreshPosts(); // ✅ 목록 갱신
+      refreshPosts();
     } catch (err) {
       console.error('삭제 실패:', err);
     }
@@ -127,11 +151,34 @@ export default function AdminPage() {
               <input
                 type="file"
                 accept="image/*"
-                {...register('file')}
+                {...registerRest}
+                ref={(e) => {
+                  registerRef(e);
+                  fileInputRef.current = e;
+                }}
+                onChange={(e) => {
+                  registerRest.onChange(e);
+                  handleImageChange(e);
+                }}
                 className="border border-gray-300 rounded px-3 py-1.5 bg-gray-50 text-sm"
               />
             </div>
           </div>
+
+          {/* ✅ 이미지 미리보기 영역 */}
+          {previewImage && (
+            <div className="relative w-40 h-40 border-2 border-gray-300 rounded-lg overflow-hidden">
+              <img src={previewImage} alt="미리보기" className="w-full h-full object-cover" />
+              {/* ✅ X 버튼 */}
+              <button
+                type="button"
+                onClick={removePreviewImage}
+                className="absolute top-1 right-1 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center hover:bg-red-600 transition-colors shadow-md"
+              >
+                ✕
+              </button>
+            </div>
+          )}
 
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">내용</label>
