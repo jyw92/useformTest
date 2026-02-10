@@ -2,8 +2,6 @@ import axios from 'axios';
 import React, {useEffect, useState, useRef} from 'react';
 import {useForm} from 'react-hook-form';
 
-// ❌ import bmwData from '../data/bmw.json';  <-- 삭제됨
-
 // 🟢 타입 정의
 type BmwData = {
   [key: string]: string[];
@@ -17,6 +15,8 @@ interface Post {
   createdAt: string;
   series: string;
   model: string;
+  fuel: string; // 라디오 값
+  options: string[]; // 체크박스 값 (배열)
 }
 
 interface FormInputs {
@@ -25,12 +25,13 @@ interface FormInputs {
   file: FileList;
   series: string;
   model: string;
+  fuel: string;
+  options: string[];
 }
 
 export default function AdminPage() {
   const [posts, setPosts] = useState<Post[]>([]);
-  // 🟢 BMW 데이터를 서버에서 받아와 저장할 State 추가
-  const [bmwData, setBmwData] = useState<BmwData>({});
+  const [bmwData, setBmwData] = useState<BmwData>({}); // 서버에서 받아올 차종 데이터
 
   const [previewImage, setPreviewImage] = useState<string>('');
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -47,43 +48,35 @@ export default function AdminPage() {
 
   const {ref: registerRef, ...registerRest} = register('file');
 
-  // 🟢 실시간 선택값 감시
-  // "값이 들어간 상태"를 실시간으로 가져오는 것
+  // 🟢 실시간 값 감시 (Dependent Dropdown용)
   const selectedSeries = watch('series');
-
-  // 🟢 선택된 시리즈의 모델 목록 (bmwData state에서 가져옴)
   const models = selectedSeries ? bmwData[selectedSeries] : [];
 
-  // 🟢 데이터 불러오기 (게시글 + BMW 차종 데이터)
+  // 🟢 초기 데이터 로딩 (게시글 + 차종 데이터)
   useEffect(() => {
     const fetchData = async () => {
       try {
-        // Promise.all을 사용하여 두 요청을 병렬로 처리 (더 빠름)
-        const [postsRes, bmwRes] = await Promise.all([
-          axios.get('/posts'),
-          axios.get('/bmw'), // 🟢 BMW 데이터 요청
-        ]);
-
+        const [postsRes, bmwRes] = await Promise.all([axios.get('/posts'), axios.get('/bmw')]);
         setPosts(postsRes.data);
-        setBmwData(bmwRes.data); // 🟢 받아온 BMW 데이터를 state에 저장
+        setBmwData(bmwRes.data);
       } catch (err) {
         console.error('데이터 로딩 실패:', err);
       }
     };
-
     fetchData();
   }, []);
 
-  // 게시글 목록만 새로고침하는 함수
+  // 목록 새로고침
   const refreshPosts = async () => {
     try {
       const res = await axios.get('/posts');
       setPosts(res.data);
     } catch (err) {
-      console.error('게시글 로딩 실패:', err);
+      console.error('목록 갱신 실패:', err);
     }
   };
 
+  // 이미지 미리보기 처리
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
@@ -103,18 +96,12 @@ export default function AdminPage() {
     resetField('file');
   };
 
-  // 🗑️ 삭제 핸들러 함수
+  // 🗑️ 삭제 핸들러
   const handleDelete = async (id: string) => {
-    // 1. 실수로 누르는 것을 방지하기 위해 확인창 띄우기
-    if (!confirm('정말 이 게시글을 삭제하시겠습니까?')) return;
-
+    if (!confirm('정말 삭제하시겠습니까? 🗑️')) return;
     try {
-      // 2. 서버에 삭제 요청 (ID를 URL 뒤에 붙여서 보냄)
       await axios.delete(`/posts/${id}`);
-
       alert('삭제되었습니다.');
-
-      // 3. 목록 새로고침 (화면에서 지워진 것 반영)
       refreshPosts();
     } catch (error) {
       console.error('삭제 실패:', error);
@@ -122,11 +109,14 @@ export default function AdminPage() {
     }
   };
 
+  // 📝 등록 핸들러
   const onSubmit = async (data: FormInputs) => {
     if (!confirm('게시글을 등록하시겠습니까?')) return;
 
     try {
       let imageUrl = '';
+
+      // Cloudinary 업로드
       if (data.file && data.file.length > 0) {
         const formData = new FormData();
         formData.append('file', data.file[0]);
@@ -140,19 +130,19 @@ export default function AdminPage() {
         imageUrl = uploadRes.data.secure_url;
       }
 
+      // JSON Server 저장
+      // (체크박스 값인 data.options는 자동으로 배열로 전송됩니다)
       await axios.post('/posts', {
-        title: data.title,
-        content: data.content,
+        ...data, // title, content, series, model, fuel, options 모두 포함
         imageUrl: imageUrl,
         createdAt: new Date().toLocaleDateString(),
-        series: data.series,
-        model: data.model,
+        // file 객체는 서버에 저장할 필요 없으므로 제외해도 됨 (JSON Server는 무시함)
       });
 
       alert('등록 성공! 🎉');
-      reset();
+      reset(); // 폼 초기화
       setPreviewImage('');
-      refreshPosts();
+      refreshPosts(); // 목록 갱신
     } catch (error) {
       console.error('등록 실패:', error);
       alert('에러가 발생했습니다.');
@@ -163,22 +153,23 @@ export default function AdminPage() {
     <div className="max-w-5xl mx-auto p-4">
       <h2 className="text-2xl font-bold mb-6 text-gray-800">🛠️ 게시글 관리</h2>
 
+      {/* 🟢 입력 폼 영역 */}
       <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-200 mb-10">
         <h3 className="text-lg font-bold mb-4 border-b pb-2">새 글 작성</h3>
 
-        <form className="flex flex-col gap-4" onSubmit={handleSubmit(onSubmit)}>
-          <div className="flex gap-4">
-            <div className="flex-1">
+        <form className="flex flex-col gap-6" onSubmit={handleSubmit(onSubmit)}>
+          {/* 1. 차량 정보 (콤보박스) */}
+          <div className="grid grid-cols-2 gap-4">
+            <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">BMW 시리즈</label>
               <select
-                className="w-full border border-gray-300 rounded px-3 py-2 focus:ring-2 focus:ring-blue-500 outline-none bg-white"
+                className="w-full border border-gray-300 rounded px-3 py-2 outline-none focus:ring-2 focus:ring-blue-500 bg-white"
                 {...register('series', {
                   required: true,
-                  onChange: () => setValue('model', ''), // 시리즈 변경 시 모델 초기화
+                  onChange: () => setValue('model', ''), // 모델 초기화
                 })}
               >
                 <option value="">시리즈 선택</option>
-                {/* 🟢 bmwData State의 키값들로 옵션 생성 */}
                 {Object.keys(bmwData).map((seriesKey) => (
                   <option key={seriesKey} value={seriesKey}>
                     {seriesKey}
@@ -186,31 +177,69 @@ export default function AdminPage() {
                 ))}
               </select>
             </div>
-
-            <div className="flex-1">
+            <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">세부 모델</label>
               <select
-                className="w-full border border-gray-300 rounded px-3 py-2 focus:ring-2 focus:ring-blue-500 outline-none bg-white disabled:bg-gray-100"
+                className="w-full border border-gray-300 rounded px-3 py-2 outline-none focus:ring-2 focus:ring-blue-500 bg-white disabled:bg-gray-100"
                 {...register('model', {required: true})}
                 disabled={!selectedSeries}
               >
                 <option value="">{selectedSeries ? '모델 선택' : '시리즈를 먼저 선택하세요'}</option>
-                {/* 🟢 선택된 시리즈에 해당하는 모델들만 렌더링 */}
                 {models &&
-                  models.map((modelName) => (
-                    <option key={modelName} value={modelName}>
-                      {modelName}
+                  models.map((m) => (
+                    <option key={m} value={m}>
+                      {m}
                     </option>
                   ))}
               </select>
             </div>
           </div>
 
+          {/* 2. 연료 및 옵션 (라디오 & 체크박스) */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 bg-gray-50 p-4 rounded-lg">
+            {/* 🔘 라디오 버튼 */}
+            <div>
+              <label className="block text-sm font-bold text-gray-700 mb-2">연료 타입</label>
+              <div className="flex gap-4">
+                {['가솔린', '디젤', '전기', '하이브리드'].map((fuel) => (
+                  <label key={fuel} className="flex items-center gap-1 cursor-pointer text-sm">
+                    <input
+                      type="radio"
+                      value={fuel}
+                      {...register('fuel', {required: true})}
+                      className="text-blue-600 focus:ring-blue-500"
+                    />
+                    {fuel}
+                  </label>
+                ))}
+              </div>
+            </div>
+
+            {/* ☑️ 체크박스 */}
+            <div>
+              <label className="block text-sm font-bold text-gray-700 mb-2">추가 옵션</label>
+              <div className="flex flex-wrap gap-4">
+                {['선루프', 'HUD', '레이저 라이트', 'M스포츠 패키지'].map((opt) => (
+                  <label key={opt} className="flex items-center gap-1 cursor-pointer text-sm">
+                    <input
+                      type="checkbox"
+                      value={opt}
+                      {...register('options')}
+                      className="rounded text-blue-600 focus:ring-blue-500"
+                    />
+                    {opt}
+                  </label>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          {/* 3. 제목 및 파일 */}
           <div className="flex gap-4">
             <div className="flex-1">
               <label className="block text-sm font-medium text-gray-700 mb-1">제목</label>
               <input
-                className="w-full border border-gray-300 rounded px-3 py-2 focus:ring-2 focus:ring-blue-500 outline-none"
+                className="w-full border border-gray-300 rounded px-3 py-2 outline-none focus:ring-2 focus:ring-blue-500"
                 placeholder="제목을 입력하세요"
                 {...register('title', {required: true})}
               />
@@ -229,37 +258,40 @@ export default function AdminPage() {
                   registerRest.onChange(e);
                   handleImageChange(e);
                 }}
-                className="border border-gray-300 rounded px-3 py-1.5 bg-gray-50 text-sm"
+                className="border border-gray-300 rounded px-3 py-1.5 bg-white text-sm"
               />
             </div>
           </div>
 
+          {/* 이미지 미리보기 */}
           {previewImage && (
             <div className="relative w-40 h-40 border-2 border-gray-300 rounded-lg overflow-hidden">
               <img src={previewImage} alt="미리보기" className="w-full h-full object-cover" />
               <button
                 type="button"
                 onClick={removePreviewImage}
-                className="absolute top-1 right-1 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center hover:bg-red-600 transition-colors shadow-md"
+                className="absolute top-1 right-1 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center shadow-md hover:bg-red-600"
               >
                 ✕
               </button>
             </div>
           )}
 
+          {/* 4. 내용 */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">내용</label>
             <textarea
-              className="w-full border border-gray-300 rounded px-3 py-2 h-24 resize-none focus:ring-2 focus:ring-blue-500 outline-none"
+              className="w-full border border-gray-300 rounded px-3 py-2 h-24 resize-none outline-none focus:ring-2 focus:ring-blue-500"
               placeholder="내용을 입력하세요"
               {...register('content', {required: true})}
             />
           </div>
 
+          {/* 전송 버튼 */}
           <button
             type="submit"
             disabled={isSubmitting}
-            className={`self-end px-6 py-2 rounded text-white font-bold transition-colors ${
+            className={`self-end px-8 py-2.5 rounded text-white font-bold transition-colors shadow-sm ${
               isSubmitting ? 'bg-gray-400' : 'bg-blue-600 hover:bg-blue-700'
             }`}
           >
@@ -268,47 +300,55 @@ export default function AdminPage() {
         </form>
       </div>
 
+      {/* 🔵 게시글 목록 */}
       <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
-        <div className="p-4 border-b bg-gray-50 flex justify-between items-center">
+        <div className="p-4 border-b bg-gray-50">
           <h3 className="font-bold text-gray-700">등록된 게시글</h3>
         </div>
 
         <table className="w-full text-left border-collapse">
-          <thead className="bg-gray-100 text-gray-600 text-sm uppercase">
+          <thead className="bg-gray-100 text-gray-600 text-xs uppercase">
             <tr>
-              <th className="p-4 w-16 text-center">No</th>
-              <th className="p-4 w-24">썸네일</th>
-              <th className="p-4">차종 / 제목</th>
-              <th className="p-4 w-32">작성일</th>
+              <th className="p-4 w-12 text-center">No</th>
+              <th className="p-4 w-24">사진</th>
+              <th className="p-4 w-48">차량 정보</th>
+              <th className="p-4">제목 / 내용</th>
+              <th className="p-4 w-28">작성일</th>
               <th className="p-4 w-20 text-center">관리</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-gray-100">
+          <tbody className="divide-y divide-gray-100 text-sm">
             {posts.length > 0 ? (
               posts.map((post, index) => (
-                <tr key={post.id} className="hover:bg-gray-50 transition-colors">
+                <tr key={post.id} className="hover:bg-gray-50">
                   <td className="p-4 text-center text-gray-500">{index + 1}</td>
                   <td className="p-4">
                     {post.imageUrl ? (
-                      <img src={post.imageUrl} alt="thumb" className="w-12 h-12 rounded object-cover border" />
+                      <img src={post.imageUrl} alt="thumb" className="w-16 h-12 rounded object-cover border" />
                     ) : (
-                      <div className="w-12 h-12 bg-gray-200 rounded flex items-center justify-center text-xs text-gray-500">
+                      <div className="w-16 h-12 bg-gray-100 rounded flex items-center justify-center text-xs text-gray-400">
                         No Img
                       </div>
                     )}
                   </td>
-                  <td className="p-4">
-                    <div className="text-xs font-bold text-blue-600 mb-0.5">
-                      {post.series} &gt; {post.model}
+                  <td className="p-4 align-top">
+                    <div className="font-bold text-blue-700">{post.series}</div>
+                    <div className="text-gray-800 font-medium">{post.model}</div>
+                    <div className="text-xs text-gray-500 mt-1">
+                      <span className="bg-gray-200 px-1.5 rounded mr-1">{post.fuel}</span>
+                      {post.options?.length > 0 && `+ ${post.options.length} 옵션`}
                     </div>
-                    <p className="font-bold text-gray-800">{post.title}</p>
-                    <p className="text-sm text-gray-500 truncate max-w-xs">{post.content}</p>
                   </td>
-                  <td className="p-4 text-sm text-gray-500">{post.createdAt}</td>
+                  <td className="p-4 align-top">
+                    <p className="font-bold text-gray-800 text-base mb-1">{post.title}</p>
+                    <p className="text-gray-500 line-clamp-2">{post.content}</p>
+                  </td>
+                  <td className="p-4 text-gray-500">{post.createdAt}</td>
                   <td className="p-4 text-center">
                     <button
-                      className="bg-red-50 text-red-600 px-3 py-1 rounded text-sm hover:bg-red-100 transition whitespace-nowrap"
+                      type="button"
                       onClick={() => handleDelete(post.id)}
+                      className="text-red-500 hover:text-red-700 hover:bg-red-50 px-3 py-1.5 rounded transition whitespace-nowrap"
                     >
                       삭제
                     </button>
@@ -317,7 +357,7 @@ export default function AdminPage() {
               ))
             ) : (
               <tr>
-                <td colSpan={5} className="p-10 text-center text-gray-400">
+                <td colSpan={6} className="p-12 text-center text-gray-400">
                   등록된 게시글이 없습니다.
                 </td>
               </tr>

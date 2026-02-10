@@ -8,6 +8,25 @@
       "createdAt": "2026. 2. 11.",
       "series": "3 Series",
       "model": "M340i"
+    },
+    {
+      "id": "6dbb",
+      "file": {
+        "0": {}
+      },
+      "series": "1 Series",
+      "model": "120i Sport",
+      "fuel": "가솔린",
+      "options": [
+        "선루프",
+        "HUD",
+        "레이저 라이트",
+        "M스포츠 패키지"
+      ],
+      "title": "1시리즈 가즈아",
+      "content": "1시리즈 가즈아아아아!!!",
+      "imageUrl": "https://res.cloudinary.com/dffwporwa/image/upload/v1770737932/board_images/a88qt7u7idau1xa717f2.png",
+      "createdAt": "2026. 2. 11."
     }
   ],
   "bmw": {
