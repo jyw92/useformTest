@@ -1,0 +1,85 @@
+{
+  "posts": [
+    {
+      "id": "1038",
+      "title": "우주명차",
+      "content": "우주명차 340아이",
+      "imageUrl": "https://res.cloudinary.com/dffwporwa/image/upload/v1770737179/board_images/wmve1ut5shvn6zgmeuct.png",
+      "createdAt": "2026. 2. 11.",
+      "series": "3 Series",
+      "model": "M340i"
+    }
+  ],
+  "bmw": {
+    "1 Series": [
+      "120i Sport",
+      "120i M Sport",
+      "M135i xDrive"
+    ],
+    "2 Series": [
+      "220i Gran Coupe",
+      "M235i xDrive",
+      "M2 Coupe"
+    ],
+    "3 Series": [
+      "320i",
+      "320d",
+      "330e",
+      "M340i",
+      "M3 Competition",
+      "320i Touring"
+    ],
+    "4 Series": [
+      "420i Coupe",
+      "420i Convertible",
+      "420i Gran Coupe",
+      "M440i",
+      "M4 Competition",
+      "i4 eDrive40"
+    ],
+    "5 Series": [
+      "520i",
+      "530i",
+      "523d",
+      "i5 eDrive40",
+      "i5 M60",
+      "M5"
+    ],
+    "6 Series": [
+      "620d GT",
+      "630i GT",
+      "640i GT"
+    ],
+    "7 Series": [
+      "740i",
+      "750e",
+      "i7 xDrive60",
+      "i7 M70"
+    ],
+    "8 Series": [
+      "840i Coupe",
+      "840i Gran Coupe",
+      "M8 Competition"
+    ],
+    "X Series": [
+      "X1",
+      "X2",
+      "X3",
+      "X4",
+      "X5",
+      "X6",
+      "X7",
+      "XM"
+    ],
+    "Z Series": [
+      "Z4 sDrive20i",
+      "Z4 M40i"
+    ],
+    "i Series (EV Only)": [
+      "iX1",
+      "iX3",
+      "iX xDrive50",
+      "iX M60"
+    ]
+  }
+}
