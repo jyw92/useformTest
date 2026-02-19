@@ -1,8 +1,9 @@
 import axios from 'axios';
 import React, {useEffect, useState, useRef} from 'react';
 import {useForm} from 'react-hook-form';
-import {useSearchParams, useNavigate} from 'react-router-dom';
+import {useSearchParams} from 'react-router-dom';
 
+// 🟢 타입 정의
 type BmwData = {
   [key: string]: string[];
 };
@@ -29,16 +30,17 @@ interface FormInputs {
   options: string[];
 }
 
-export default function AdminPage() {
+export default function AdminPageBak() {
   const [posts, setPosts] = useState<Post[]>([]);
   const [bmwData, setBmwData] = useState<BmwData>({});
+
   const [previewImage, setPreviewImage] = useState<string>('');
   const fileInputRef = useRef<HTMLInputElement>(null);
 
+  // 🟢 URL 쿼리스트링 상태 가져오기 (페이지네이션)
   const [searchParams, setSearchParams] = useSearchParams();
   const currentPage = parseInt(searchParams.get('page') || '1', 10);
   const itemsPerPage = 5;
-  const navigate = useNavigate();
 
   const {
     register,
@@ -51,6 +53,7 @@ export default function AdminPage() {
   } = useForm<FormInputs>();
 
   const {ref: registerRef, ...registerRest} = register('file');
+
   const selectedSeries = watch('series');
   const models = selectedSeries ? bmwData[selectedSeries] : [];
 
@@ -85,9 +88,7 @@ export default function AdminPage() {
 
   useEffect(() => {
     return () => {
-      if (previewImage && !previewImage.startsWith('http')) {
-        URL.revokeObjectURL(previewImage);
-      }
+      if (previewImage) URL.revokeObjectURL(previewImage);
     };
   }, [previewImage]);
 
@@ -111,8 +112,10 @@ export default function AdminPage() {
 
   const onSubmit = async (data: FormInputs) => {
     if (!confirm('게시글을 등록하시겠습니까?')) return;
+
     try {
       let imageUrl = '';
+
       if (data.file && data.file.length > 0) {
         const formData = new FormData();
         formData.append('file', data.file[0]);
@@ -127,12 +130,7 @@ export default function AdminPage() {
       }
 
       await axios.post('/posts', {
-        title: data.title,
-        content: data.content,
-        series: data.series,
-        model: data.model,
-        fuel: data.fuel,
-        options: data.options || [],
+        ...data,
         imageUrl: imageUrl,
         createdAt: new Date().toLocaleDateString(),
       });
@@ -141,19 +139,21 @@ export default function AdminPage() {
       reset();
       setPreviewImage('');
       refreshPosts();
-      setSearchParams({page: '1'});
+      setSearchParams({page: '1'}); // 등록 후 1페이지로 이동
     } catch (error) {
       console.error('등록 실패:', error);
       alert('에러가 발생했습니다.');
     }
   };
 
+  // 🟢 데이터 슬라이싱 로직
   const totalPages = Math.ceil(posts.length / itemsPerPage);
   const indexOfLastPost = currentPage * itemsPerPage;
   const indexOfFirstPost = indexOfLastPost - itemsPerPage;
-  const currentPosts = [...posts]
-    .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
-    .slice(indexOfFirstPost, indexOfLastPost);
+  // 전체 포스트를 역순(최신순)으로 보여주고 싶다면 아래 posts.slice를 [...posts].reverse().slice() 로 변경하세요.
+  const currentPosts = posts.slice(indexOfFirstPost, indexOfLastPost);
+  //최신순 역순
+  // const currentPosts = [...posts].reverse().slice(indexOfFirstPost, indexOfLastPost);
 
   const handlePageChange = (pageNumber: number) => {
     setSearchParams({page: pageNumber.toString()});
@@ -163,16 +163,21 @@ export default function AdminPage() {
     <div className="max-w-5xl mx-auto p-4">
       <h2 className="text-2xl font-bold mb-6 text-gray-800">🛠️ 게시글 관리</h2>
 
-      {/* 새 글 작성 폼 */}
+      {/* 🟢 입력 폼 영역 (복구됨!) */}
       <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-200 mb-10">
-        <h3 className="text-lg font-bold mb-4 border-b pb-2">📝 새 글 작성</h3>
+        <h3 className="text-lg font-bold mb-4 border-b pb-2">새 글 작성</h3>
+
         <form className="flex flex-col gap-6" onSubmit={handleSubmit(onSubmit)}>
+          {/* 1. 차량 정보 (콤보박스) */}
           <div className="grid grid-cols-2 gap-4">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">BMW 시리즈</label>
               <select
                 className="w-full border border-gray-300 rounded px-3 py-2 outline-none focus:ring-2 focus:ring-blue-500 bg-white"
-                {...register('series', {required: true, onChange: () => setValue('model', '')})}
+                {...register('series', {
+                  required: true,
+                  onChange: () => setValue('model', ''),
+                })}
               >
                 <option value="">시리즈 선택</option>
                 {Object.keys(bmwData).map((seriesKey) => (
@@ -200,6 +205,7 @@ export default function AdminPage() {
             </div>
           </div>
 
+          {/* 2. 연료 및 옵션 (라디오 & 체크박스) */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 bg-gray-50 p-4 rounded-lg">
             <div>
               <label className="block text-sm font-bold text-gray-700 mb-2">연료 타입</label>
@@ -210,19 +216,25 @@ export default function AdminPage() {
                       type="radio"
                       value={fuel}
                       {...register('fuel', {required: true})}
-                      className="text-blue-600"
+                      className="text-blue-600 focus:ring-blue-500"
                     />
                     {fuel}
                   </label>
                 ))}
               </div>
             </div>
+
             <div>
               <label className="block text-sm font-bold text-gray-700 mb-2">추가 옵션</label>
               <div className="flex flex-wrap gap-4">
                 {['선루프', 'HUD', '레이저 라이트', 'M스포츠 패키지'].map((opt) => (
                   <label key={opt} className="flex items-center gap-1 cursor-pointer text-sm">
-                    <input type="checkbox" value={opt} {...register('options')} className="rounded text-blue-600" />
+                    <input
+                      type="checkbox"
+                      value={opt}
+                      {...register('options')}
+                      className="rounded text-blue-600 focus:ring-blue-500"
+                    />
                     {opt}
                   </label>
                 ))}
@@ -230,6 +242,7 @@ export default function AdminPage() {
             </div>
           </div>
 
+          {/* 3. 제목 및 파일 */}
           <div className="flex gap-4">
             <div className="flex-1">
               <label className="block text-sm font-medium text-gray-700 mb-1">제목</label>
@@ -258,6 +271,7 @@ export default function AdminPage() {
             </div>
           </div>
 
+          {/* 이미지 미리보기 */}
           {previewImage && (
             <div className="relative w-40 h-40 border-2 border-gray-300 rounded-lg overflow-hidden">
               <img src={previewImage} alt="미리보기" className="w-full h-full object-cover" />
@@ -271,6 +285,7 @@ export default function AdminPage() {
             </div>
           )}
 
+          {/* 4. 내용 */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">내용</label>
             <textarea
@@ -280,17 +295,20 @@ export default function AdminPage() {
             />
           </div>
 
+          {/* 전송 버튼 */}
           <button
             type="submit"
             disabled={isSubmitting}
-            className={`self-end px-8 py-2.5 rounded text-white font-bold transition-colors shadow-sm ${isSubmitting ? 'bg-gray-400' : 'bg-blue-600 hover:bg-blue-700'}`}
+            className={`self-end px-8 py-2.5 rounded text-white font-bold transition-colors shadow-sm ${
+              isSubmitting ? 'bg-gray-400' : 'bg-blue-600 hover:bg-blue-700'
+            }`}
           >
             {isSubmitting ? '업로드중...' : '등록하기'}
           </button>
         </form>
       </div>
 
-      {/* 게시글 목록 */}
+      {/* 🔵 게시글 목록 */}
       <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
         <div className="p-4 border-b bg-gray-50">
           <h3 className="font-bold text-gray-700">등록된 게시글 (총 {posts.length}개)</h3>
@@ -310,11 +328,7 @@ export default function AdminPage() {
           <tbody className="divide-y divide-gray-100 text-sm">
             {currentPosts.length > 0 ? (
               currentPosts.map((post, index) => (
-                <tr
-                  key={post.id}
-                  className="hover:bg-blue-50 cursor-pointer transition-colors"
-                  onClick={() => navigate(`/admin/${post.id}`)}
-                >
+                <tr key={post.id} className="hover:bg-gray-50">
                   <td className="p-4 text-center text-gray-500">{posts.length - (indexOfFirstPost + index)}</td>
                   <td className="p-4">
                     {post.imageUrl ? (
@@ -338,7 +352,7 @@ export default function AdminPage() {
                     <p className="text-gray-500 line-clamp-2">{post.content}</p>
                   </td>
                   <td className="p-4 text-gray-500">{post.createdAt}</td>
-                  <td className="p-4 text-center" onClick={(e) => e.stopPropagation()}>
+                  <td className="p-4 text-center">
                     <button
                       type="button"
                       onClick={() => handleDelete(post.id)}
@@ -359,29 +373,36 @@ export default function AdminPage() {
           </tbody>
         </table>
 
-        {/* 페이지네이션 */}
+        {/* 🟢 하단 페이지네이션 UI */}
         {totalPages > 0 && (
           <div className="flex justify-center items-center py-6 gap-2 bg-white border-t">
             <button
               onClick={() => handlePageChange(currentPage - 1)}
               disabled={currentPage === 1}
-              className="px-3 py-1 rounded border border-gray-300 text-gray-600 hover:bg-gray-100 disabled:opacity-50"
+              className="px-3 py-1 rounded border border-gray-300 text-gray-600 hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               이전
             </button>
+
             {Array.from({length: totalPages}, (_, i) => i + 1).map((page) => (
               <button
                 key={page}
                 onClick={() => handlePageChange(page)}
-                className={`w-8 h-8 rounded border flex items-center justify-center font-medium ${currentPage === page ? 'bg-blue-600 text-white border-blue-600' : 'bg-white text-gray-600 border-gray-300 hover:bg-gray-100'}`}
+                className={`w-8 h-8 rounded border flex items-center justify-center font-medium transition-colors
+                  ${
+                    currentPage === page
+                      ? 'bg-blue-600 text-white border-blue-600'
+                      : 'bg-white text-gray-600 border-gray-300 hover:bg-gray-100'
+                  }`}
               >
                 {page}
               </button>
             ))}
+
             <button
               onClick={() => handlePageChange(currentPage + 1)}
               disabled={currentPage === totalPages}
-              className="px-3 py-1 rounded border border-gray-300 text-gray-600 hover:bg-gray-100 disabled:opacity-50"
+              className="px-3 py-1 rounded border border-gray-300 text-gray-600 hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               다음
             </button>
