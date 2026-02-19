@@ -30,7 +30,7 @@ interface FormInputs {
   options: string[];
 }
 
-export default function AdminPage() {
+export default function AdminPage_bak() {
   const [posts, setPosts] = useState<Post[]>([]);
   const [bmwData, setBmwData] = useState<BmwData>({});
 
@@ -151,21 +151,9 @@ export default function AdminPage() {
   const indexOfLastPost = currentPage * itemsPerPage;
   const indexOfFirstPost = indexOfLastPost - itemsPerPage;
   // 전체 포스트를 역순(최신순)으로 보여주고 싶다면 아래 posts.slice를 [...posts].reverse().slice() 로 변경하세요.
-  // const currentPosts = posts.slice(indexOfFirstPost, indexOfLastPost);
+  const currentPosts = posts.slice(indexOfFirstPost, indexOfLastPost);
   //최신순 역순
   // const currentPosts = [...posts].reverse().slice(indexOfFirstPost, indexOfLastPost);
-
-  //날짜가 랜덤이라면?
-  const currentPosts = [...posts]
-    .sort((a, b) => {
-      // 1. 문자열인 날짜("2026. 2. 11.")를 Date 객체로 변환하고 밀리초 숫자로 바꿈
-      const dateA = new Date(a.createdAt).getTime();
-      const dateB = new Date(b.createdAt).getTime();
-
-      // 2. 더 최신 날짜(숫자가 큼)를 앞으로 보내기 (내림차순)
-      return dateB - dateA;
-    })
-    .slice(indexOfFirstPost, indexOfLastPost); // 3. 정렬된 상태에서 5개 자르기
 
   const handlePageChange = (pageNumber: number) => {
     setSearchParams({page: pageNumber.toString()});

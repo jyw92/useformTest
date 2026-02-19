@@ -2,103 +2,236 @@
   "posts": [
     {
       "id": "1038",
-      "title": "우주명차",
-      "content": "우주명차 340아이",
+      "title": "우주명차 출고했습니다",
+      "content": "우주명차 340아이 너무 마음에 듭니다. 펀드라이빙 최고네요.",
       "imageUrl": "https://res.cloudinary.com/dffwporwa/image/upload/v1770737179/board_images/wmve1ut5shvn6zgmeuct.png",
       "createdAt": "2026. 2. 11.",
       "series": "3 Series",
-      "model": "M340i"
+      "model": "M340i",
+      "fuel": "가솔린",
+      "options": ["선루프", "레이저 라이트", "M스포츠 패키지"]
     },
     {
-      "id": "6dbb",
-      "file": {
-        "0": {}
-      },
-      "series": "1 Series",
-      "model": "120i Sport",
+      "id": "0880",
+      "title": "테스트",
+      "content": "두쫀쿠 테스트 중입니다.",
+      "imageUrl": "https://res.cloudinary.com/dffwporwa/image/upload/v1771512472/board_images/bgeyvwzmka1bz46bjfro.png",
+      "createdAt": "2026. 2. 19.",
+      "series": "2 Series",
+      "model": "220i Gran Coupe",
       "fuel": "가솔린",
-      "options": [
-        "선루프",
-        "HUD",
-        "레이저 라이트",
-        "M스포츠 패키지"
-      ],
-      "title": "1시리즈 가즈아",
-      "content": "1시리즈 가즈아아아아!!!",
-      "imageUrl": "https://res.cloudinary.com/dffwporwa/image/upload/v1770737932/board_images/a88qt7u7idau1xa717f2.png",
-      "createdAt": "2026. 2. 11."
+      "options": ["선루프", "HUD", "레이저 라이트", "M스포츠 패키지"]
+    },
+    {
+      "id": "2911",
+      "title": "5시리즈 실연비 공유",
+      "content": "고속도로 올리면 연비 정말 잘 나옵니다. 대만족!",
+      "imageUrl": "https://res.cloudinary.com/dffwporwa/image/upload/v1770737179/board_images/wmve1ut5shvn6zgmeuct.png",
+      "createdAt": "2026. 2. 18.",
+      "series": "5 Series",
+      "model": "520i",
+      "fuel": "가솔린",
+      "options": ["선루프", "HUD"]
+    },
+    {
+      "id": "4022",
+      "title": "패밀리카로 X5 기변",
+      "content": "공간 넉넉하고 승차감 좋아서 가족들이 다 좋아합니다.",
+      "imageUrl": "https://res.cloudinary.com/dffwporwa/image/upload/v1771512472/board_images/bgeyvwzmka1bz46bjfro.png",
+      "createdAt": "2026. 2. 17.",
+      "series": "X5",
+      "model": "xDrive 40i",
+      "fuel": "가솔린",
+      "options": ["선루프", "M스포츠 패키지"]
+    },
+    {
+      "id": "5193",
+      "title": "전기차 i4 첫 시승기",
+      "content": "가속력이 미쳤습니다. 내연기관이랑은 또 다른 매력이네요.",
+      "imageUrl": "https://res.cloudinary.com/dffwporwa/image/upload/v1770737179/board_images/wmve1ut5shvn6zgmeuct.png",
+      "createdAt": "2026. 2. 16.",
+      "series": "i4",
+      "model": "eDrive40",
+      "fuel": "전기",
+      "options": ["HUD", "레이저 라이트"]
+    },
+    {
+      "id": "6384",
+      "title": "7시리즈 뒷좌석 리뷰",
+      "content": "회장님 차답게 뒷좌석 스크린이랑 안마시트 예술입니다.",
+      "imageUrl": "https://res.cloudinary.com/dffwporwa/image/upload/v1771512472/board_images/bgeyvwzmka1bz46bjfro.png",
+      "createdAt": "2026. 2. 15.",
+      "series": "7 Series",
+      "model": "740i",
+      "fuel": "가솔린",
+      "options": ["선루프", "HUD", "레이저 라이트"]
+    },
+    {
+      "id": "7475",
+      "title": "X3 디젤 아직 탈만할까요?",
+      "content": "장거리 많이 뛰어서 디젤 샀는데 진동 소음 생각보다 적네요.",
+      "imageUrl": "https://res.cloudinary.com/dffwporwa/image/upload/v1770737179/board_images/wmve1ut5shvn6zgmeuct.png",
+      "createdAt": "2026. 2. 14.",
+      "series": "X3",
+      "model": "xDrive 20d",
+      "fuel": "디젤",
+      "options": ["M스포츠 패키지"]
+    },
+    {
+      "id": "8566",
+      "title": "하이브리드 모드 질문이요",
+      "content": "배터리 충전 모드로 달릴 때 연비 하락폭이 어느 정도 되나요?",
+      "imageUrl": "https://res.cloudinary.com/dffwporwa/image/upload/v1771512472/board_images/bgeyvwzmka1bz46bjfro.png",
+      "createdAt": "2026. 2. 13.",
+      "series": "5 Series",
+      "model": "530e",
+      "fuel": "하이브리드",
+      "options": ["선루프", "HUD"]
+    },
+    {
+      "id": "9657",
+      "title": "M2 출고 대기 중",
+      "content": "드디어 M의 세계로 입문합니다. 빨리 받고 싶네요 ㅠㅠ",
+      "imageUrl": "https://res.cloudinary.com/dffwporwa/image/upload/v1770737179/board_images/wmve1ut5shvn6zgmeuct.png",
+      "createdAt": "2026. 2. 12.",
+      "series": "M",
+      "model": "M2",
+      "fuel": "가솔린",
+      "options": ["HUD", "M스포츠 패키지"]
+    },
+    {
+      "id": "1748",
+      "title": "1시리즈 해치백 매력",
+      "content": "도심에서 타고 다니기 요리조리 너무 편하고 재밌습니다.",
+      "imageUrl": "https://res.cloudinary.com/dffwporwa/image/upload/v1771512472/board_images/bgeyvwzmka1bz46bjfro.png",
+      "createdAt": "2026. 2. 10.",
+      "series": "1 Series",
+      "model": "120i",
+      "fuel": "가솔린",
+      "options": ["선루프"]
+    },
+    {
+      "id": "2839",
+      "title": "세차하고 한 컷",
+      "content": "광택 내고 나니 차가 달라 보이네요 ㅎㅎ",
+      "imageUrl": "https://res.cloudinary.com/dffwporwa/image/upload/v1770737179/board_images/wmve1ut5shvn6zgmeuct.png",
+      "createdAt": "2026. 2. 09.",
+      "series": "4 Series",
+      "model": "420i Coupe",
+      "fuel": "가솔린",
+      "options": ["선루프", "레이저 라이트"]
+    },
+    {
+      "id": "3920",
+      "title": "iX 디자인 뇌에이징 완료",
+      "content": "처음엔 콧구멍 크다고 생각했는데 볼수록 미래지향적이고 예쁩니다.",
+      "imageUrl": "https://res.cloudinary.com/dffwporwa/image/upload/v1771512472/board_images/bgeyvwzmka1bz46bjfro.png",
+      "createdAt": "2026. 2. 08.",
+      "series": "iX",
+      "model": "xDrive50",
+      "fuel": "전기",
+      "options": ["HUD", "레이저 라이트", "M스포츠 패키지"]
+    },
+    {
+      "id": "4011",
+      "title": "X7 광활한 실내공간",
+      "content": "3열 펴고도 트렁크 공간이 어느 정도 나와서 캠핑 갈 때 딱입니다.",
+      "imageUrl": "https://res.cloudinary.com/dffwporwa/image/upload/v1770737179/board_images/wmve1ut5shvn6zgmeuct.png",
+      "createdAt": "2026. 2. 07.",
+      "series": "X7",
+      "model": "xDrive 40i",
+      "fuel": "가솔린",
+      "options": ["선루프", "HUD"]
+    },
+    {
+      "id": "5102",
+      "title": "Z4 뚜따의 계절이 오네요",
+      "content": "날씨 풀리면 바로 오픈하고 달려야겠습니다.",
+      "imageUrl": "https://res.cloudinary.com/dffwporwa/image/upload/v1771512472/board_images/bgeyvwzmka1bz46bjfro.png",
+      "createdAt": "2026. 2. 06.",
+      "series": "Z4",
+      "model": "M40i",
+      "fuel": "가솔린",
+      "options": ["HUD", "M스포츠 패키지"]
+    },
+    {
+      "id": "6293",
+      "title": "320i 출고 인증합니다",
+      "content": "사회초년생 첫 차로 뽑았습니다! 무사고 기원해주세요.",
+      "imageUrl": "https://res.cloudinary.com/dffwporwa/image/upload/v1770737179/board_images/wmve1ut5shvn6zgmeuct.png",
+      "createdAt": "2026. 2. 05.",
+      "series": "3 Series",
+      "model": "320i",
+      "fuel": "가솔린",
+      "options": ["선루프"]
+    },
+    {
+      "id": "7384",
+      "title": "플러그인 하이브리드 충전 꿀팁",
+      "content": "퇴근하고 완속 물려놓으면 다음날 출퇴근은 전기로만 커버 되네요.",
+      "imageUrl": "https://res.cloudinary.com/dffwporwa/image/upload/v1771512472/board_images/bgeyvwzmka1bz46bjfro.png",
+      "createdAt": "2026. 2. 04.",
+      "series": "3 Series",
+      "model": "330e",
+      "fuel": "하이브리드",
+      "options": ["HUD", "M스포츠 패키지"]
+    },
+    {
+      "id": "8475",
+      "title": "X6 쿠페형 SUV 디자인 원탑",
+      "content": "뒷태 빵빵한 게 너무 섹시합니다. 뒷좌석 헤드룸도 생각보다 안 좁아요.",
+      "imageUrl": "https://res.cloudinary.com/dffwporwa/image/upload/v1770737179/board_images/wmve1ut5shvn6zgmeuct.png",
+      "createdAt": "2026. 2. 03.",
+      "series": "X6",
+      "model": "xDrive 40i",
+      "fuel": "가솔린",
+      "options": ["선루프", "레이저 라이트"]
+    },
+    {
+      "id": "9566",
+      "title": "디젤 겨울철 관리 어떻게 하시나요?",
+      "content": "예열 후열 필수라고 하던데 요즘 차들도 꼭 해야하나요?",
+      "imageUrl": "https://res.cloudinary.com/dffwporwa/image/upload/v1771512472/board_images/bgeyvwzmka1bz46bjfro.png",
+      "createdAt": "2026. 2. 02.",
+      "series": "5 Series",
+      "model": "523d",
+      "fuel": "디젤",
+      "options": ["선루프", "HUD"]
+    },
+    {
+      "id": "0657",
+      "title": "M5 컴페티션 시승기",
+      "content": "이건 차가 아니라 미사일입니다. 밟는 대로 튀어나가네요.",
+      "imageUrl": "https://res.cloudinary.com/dffwporwa/image/upload/v1770737179/board_images/wmve1ut5shvn6zgmeuct.png",
+      "createdAt": "2026. 2. 01.",
+      "series": "M",
+      "model": "M5",
+      "fuel": "가솔린",
+      "options": ["선루프", "HUD", "레이저 라이트", "M스포츠 패키지"]
+    },
+    {
+      "id": "1749",
+      "title": "i7 실물 깡패네요",
+      "content": "투톤 컬러 실제로 보니 압도적입니다. 승차감은 구름 위를 걷는 느낌.",
+      "imageUrl": "https://res.cloudinary.com/dffwporwa/image/upload/v1771512472/board_images/bgeyvwzmka1bz46bjfro.png",
+      "createdAt": "2026. 1. 30.",
+      "series": "i7",
+      "model": "xDrive60",
+      "fuel": "전기",
+      "options": ["선루프", "HUD", "레이저 라이트", "M스포츠 패키지"]
     }
   ],
   "bmw": {
-    "1 Series": [
-      "120i Sport",
-      "120i M Sport",
-      "M135i xDrive"
-    ],
-    "2 Series": [
-      "220i Gran Coupe",
-      "M235i xDrive",
-      "M2 Coupe"
-    ],
-    "3 Series": [
-      "320i",
-      "320d",
-      "330e",
-      "M340i",
-      "M3 Competition",
-      "320i Touring"
-    ],
-    "4 Series": [
-      "420i Coupe",
-      "420i Convertible",
-      "420i Gran Coupe",
-      "M440i",
-      "M4 Competition",
-      "i4 eDrive40"
-    ],
-    "5 Series": [
-      "520i",
-      "530i",
-      "523d",
-      "i5 eDrive40",
-      "i5 M60",
-      "M5"
-    ],
-    "6 Series": [
-      "620d GT",
-      "630i GT",
-      "640i GT"
-    ],
-    "7 Series": [
-      "740i",
-      "750e",
-      "i7 xDrive60",
-      "i7 M70"
-    ],
-    "8 Series": [
-      "840i Coupe",
-      "840i Gran Coupe",
-      "M8 Competition"
-    ],
-    "X Series": [
-      "X1",
-      "X2",
-      "X3",
-      "X4",
-      "X5",
-      "X6",
-      "X7",
-      "XM"
-    ],
-    "Z Series": [
-      "Z4 sDrive20i",
-      "Z4 M40i"
-    ],
-    "i Series (EV Only)": [
-      "iX1",
-      "iX3",
-      "iX xDrive50",
-      "iX M60"
-    ]
+    "1 Series": ["120i Sport", "120i M Sport", "M135i xDrive"],
+    "2 Series": ["220i Gran Coupe", "M235i xDrive", "M2 Coupe"],
+    "3 Series": ["320i", "320d", "330e", "M340i", "M3 Competition", "320i Touring"],
+    "4 Series": ["420i Coupe", "420i Convertible", "420i Gran Coupe", "M440i", "M4 Competition", "i4 eDrive40"],
+    "5 Series": ["520i", "530i", "523d", "i5 eDrive40", "i5 M60", "M5"],
+    "6 Series": ["620d GT", "630i GT", "640i GT"],
+    "7 Series": ["740i", "750e", "i7 xDrive60", "i7 M70"],
+    "8 Series": ["840i Coupe", "840i Gran Coupe", "M8 Competition"],
+    "X Series": ["X1", "X2", "X3", "X4", "X5", "X6", "X7", "XM"],
+    "Z Series": ["Z4 sDrive20i", "Z4 M40i"],
+    "i Series (EV Only)": ["iX1", "iX3", "iX xDrive50", "iX M60"]
   }
 }
